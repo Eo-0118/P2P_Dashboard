@@ -84,8 +84,8 @@ dmypy.json
 # p2p directory (contains another git repository, not to be tracked here)
 p2p/
 
-# Ignore the entire predict_model directory within Aptsales
-Modeling/Aptsales/predict_model/
+# Ignore model files within the predict_model directory
+Modeling/Aptsales/predict_model/**/*.joblib
 
 # macOS
 .DS_Store
