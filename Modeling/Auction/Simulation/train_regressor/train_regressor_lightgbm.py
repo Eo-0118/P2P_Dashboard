@@ -22,7 +22,7 @@ import data_utils
 # --- 경로 및 상수 정의 ---
 DATA_PATH = "../../Data_Madang/auction_preprocessed.csv"
 RANDOM_STATE = 42
-# MODEL_OUT = "../trained_model/trained_regressor_model/auction_regressor_lightgbm.joblib"
+MODEL_OUT = "../trained_model/auction_regressor_lgbm.joblib"
 
 # --- 데이터 준비 함수 ---
 def prepare_regression_data(df):
@@ -98,16 +98,16 @@ def main():
     print("\n[INFO] 회귀 모델 학습 시작...")
     model = train_lgbm_regressor(X_train, y_train, X_test, y_test)
     
-    # base_dir = os.path.dirname(os.path.abspath(__file__))
-    # model_path = os.path.join(base_dir, MODEL_OUT)
-    # model_pack = {
-    #     "model": model,
-    #     "imputer": imputer,
-    #     "scaler": scaler,
-    #     "features": list(X.columns)
-    # }
-    # joblib.dump(model_pack, model_path)
-    # print(f"\n[INFO] 모델 저장 완료: {model_path}")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(base_dir, MODEL_OUT)
+    model_pack = {
+        "model": model,
+        "imputer": imputer,
+        "scaler": scaler,
+        "features": list(X.columns)
+    }
+    joblib.dump(model_pack, model_path)
+    print(f"\n[INFO] 모델 저장 완료: {model_path}")
     
     test_metrics = evaluate_regressor(model, X_test, y_test)
     print("\n--- 회귀 모델 평가 결과 (Test Set) ---")

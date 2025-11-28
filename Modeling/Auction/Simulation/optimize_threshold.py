@@ -20,8 +20,8 @@ import data_utils
 # ---------------------------
 # 1) 설정
 # ---------------------------
-CLASSIFIER_MODEL_NAME = "trained_model/auction_classifier_xgb_tuned.joblib"
-REGRESSOR_MODEL_NAME = "trained_model/auction_regressor_xgb_tuned.joblib"
+CLASSIFIER_MODEL_NAME = "trained_model/auction_classifier_xgb.joblib"
+REGRESSOR_MODEL_NAME = "trained_model/auction_regressor_xgb.joblib"
 DATA_PATH = "../Data_Madang/auction_preprocessed.csv"
 RANDOM_STATE = 42
 

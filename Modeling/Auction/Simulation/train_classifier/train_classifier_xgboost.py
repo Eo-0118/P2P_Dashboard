@@ -22,7 +22,7 @@ import data_utils
 
 DATA_PATH = "../../Data_Madang/auction_preprocessed.csv"
 RANDOM_STATE = 42
-# MODEL_OUT = "../trained_model/auction_classifier_xgb.joblib"
+MODEL_OUT = "../trained_model/auction_classifier_xgb.joblib"
 
 # ---------------------------
 # 2) 모델 학습 및 평가 함수
@@ -86,17 +86,17 @@ def main():
     print("\n[INFO] 모델 학습 시작...")
     bst = train_xgb(X_train, y_train, X_val=X_test, y_val=y_test)
     
-    # # 5. 모델 및 전처리 객체 저장
-    # base_dir = os.path.dirname(os.path.abspath(__file__))
-    # model_path = os.path.join(base_dir, MODEL_OUT)
-    # model_pack = {
-    #     "model": bst,
-    #     "imputer": num_imputer,
-    #     "scaler": scaler,
-    #     "features": list(X.columns)
-    # }
-    # joblib.dump(model_pack, model_path)
-    # print(f"\n[INFO] 모델 저장 완료: {model_path}")
+    # 5. 모델 및 전처리 객체 저장
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(base_dir, MODEL_OUT)
+    model_pack = {
+        "model": bst,
+        "imputer": num_imputer,
+        "scaler": scaler,
+        "features": list(X.columns)
+    }
+    joblib.dump(model_pack, model_path)
+    print(f"\n[INFO] 모델 저장 완료: {model_path}")
     
     # 6. 모델 평가
     test_metrics = evaluate_model(bst, X_test, y_test)

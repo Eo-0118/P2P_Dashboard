@@ -9,6 +9,7 @@ import pandas as pd
 import joblib
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_absolute_error
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -21,17 +22,17 @@ import data_utils
 # --------------------------- 
 # 테스트할 모델 파일 목록
 CLASSIFIER_MODEL_PATHS = {
-    "LGBM_Classifier": "trained_model/auction_classifier_lgbm_tuned.joblib",
-    "RF_Classifier": "trained_model/auction_classifier_rf_tuned.joblib",
-    "XGB_Classifier": "trained_model/auction_classifier_xgb_tuned.joblib",
+    "LGBM_Classifier": "trained_model/auction_classifier_lgbm.joblib",
+    "RF_Classifier": "trained_model/auction_classifier_rf.joblib",
+    "XGB_Classifier": "trained_model/auction_classifier_xgb.joblib",
 }
 REGRESSOR_MODEL_PATHS = {
-    "LGBM_Regressor": "trained_model/auction_regressor_lgbm_tuned.joblib",
-    "RF_Regressor": "trained_model/auction_regressor_rf_tuned.joblib",
-    "XGB_Regressor": "trained_model/auction_regressor_xgb_tuned.joblib",
+    "LGBM_Regressor": "trained_model/auction_regressor_lgbm.joblib",
+    "RF_Regressor": "trained_model/auction_regressor_rf.joblib",
+    "XGB_Regressor": "trained_model/auction_regressor_xgb.joblib",
 }
 DATA_PATH = "../Data_Madang/auction_preprocessed.csv"
-THRESHOLD = 0.40
+THRESHOLD = 0.45
 RANDOM_STATE = 42
 
 # --------------------------- 
@@ -164,12 +165,20 @@ def main():
             if actual_prices:
                 actual_prices_arr = np.array(actual_prices)
                 predicted_prices_arr = np.array(predicted_prices)
+                
+                # 성능 지표 계산
                 mape = np.mean(np.abs((actual_prices_arr - predicted_prices_arr) / actual_prices_arr)) * 100
-                print(f"MAPE: {mape:.2f}% (성공: {len(actual_prices)}/{len(df_test)})")
+                mae = mean_absolute_error(actual_prices_arr, predicted_prices_arr)
+                r2 = r2_score(actual_prices_arr, predicted_prices_arr)
+
+                print(f"MAPE: {mape:.2f}% | MAE: {mae:,.0f} | R^2: {r2:.4f} (성공: {len(actual_prices)}/{len(df_test)})")
+                
                 results_summary.append({
                     "Classifier": clf_name,
                     "Regressor": reg_name,
-                    "MAPE": mape
+                    "MAPE": mape,
+                    "MAE": mae,
+                    "R2": r2
                 })
             else:
                 print("가격 예측에 모두 실패했습니다.")
@@ -187,6 +196,8 @@ def main():
         print(f"  분류기 (Classifier): {best_combo['Classifier']}")
         print(f"  회귀 (Regressor):    {best_combo['Regressor']}")
         print(f"  MAPE:                {best_combo['MAPE']:.2f}%")
+        print(f"  MAE:                 {best_combo['MAE']:,.0f}")
+        print(f"  R^2:                 {best_combo['R2']:.4f}")
     else:
         print("모든 조합의 시뮬레이션에 실패했습니다.")
     print("#"*82 + "\n")
